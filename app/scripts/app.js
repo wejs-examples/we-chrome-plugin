@@ -173,20 +173,6 @@ app.directive('scrollbottom', [ '$timeout',
     };
   }
 ]);
-/*
-app.config([function() {
-  console.info('no .configure');''
-}]);
-*/
-/*
-app.run(['SessionService',
-  function(SessionService){
-
-  //$window.moment.lang(wejs.config.locale);
-  console.info('no .run');
-  }
-]);
-*/
 
 angular.element(document).ready(function () {
   angular.bootstrap(document, ['app']);

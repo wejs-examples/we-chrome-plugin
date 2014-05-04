@@ -2,8 +2,8 @@
   define('avatar/controllers/avatar',['angular'], function (angular) {
 
     return angular.module("application.controllers").controller("AvatarController", [
-      "$rootScope","$scope", '$upload', '$window', "$location", "SessionService", "$modal", "$modalInstance",
-      function($rootScope, $scope, $upload, $window, $location, SessionService, $modal, $modalInstance) {
+      "$rootScope","$scope", '$upload', '$window', "$location", "$modal", "$modalInstance",
+      function($rootScope, $scope, $upload, $window, $location, $modal, $modalInstance) {
 
         $scope.modalClose = function (){
           $modalInstance.close();

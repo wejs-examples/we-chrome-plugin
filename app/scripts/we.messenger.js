@@ -89,7 +89,7 @@ messenger.connect = function connectInSocketIO() {
       if(!$scope.user.authorized) return false;
 
       var newMessageObj = {};
-      var user = SessionService.getUser();
+      var user = we.getAuthenticatedUser();
 
       newMessageObj.content = data.message.content;
       newMessageObj.toId = '' ;
