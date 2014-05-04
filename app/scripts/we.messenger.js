@@ -14,7 +14,7 @@ messenger.connect = function connectInSocketIO() {
     return messenger.reconnect();
   }
 
-  messenger.socket = io.connect('http://localhost:1337');
+  messenger.socket = io.connect(we.serverUrl);
 
   messenger.socket.on('connect', function socketConnected() {
     messenger.connected = true;
