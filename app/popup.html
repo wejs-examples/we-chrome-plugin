@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+    <head>
+
+        <meta charset="utf-8">
+        <meta name="description" content="WE chrome plugin">
+        <meta name="author" content="Alberto Souza">
+        <!-- bower:css -->
+        <!-- endbower -->
+
+        <link href="styles/bootstrap.min.css" rel="stylesheet"></link>
+        <link href="styles/bootstrap-theme.min.css" rel="stylesheet"></link>
+        <link href="styles/custom.css" rel="stylesheet"></link>
+
+
+        <script src="scripts/libs/lodash.min.js"></script>
+        <script src="scripts/libs/jquery.min.js"></script>
+
+        <script src="bower_components/angular/angular.min.js"></script>
+        <script src="scripts/libs/angular-resource.min.js"></script>
+        <!-- bower:js -->
+        <!-- endbower -->
+        <!-- build:js scripts/popup.js -->
+        <script src="scripts/popup.js"></script>
+        <!-- endbuild -->
+    </head>
+    <body ng-controller="popupController">
+
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#" ng-click="tabGoTo('contacts')">Contacts</a>
+            </div>
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav">
+
+                </ul>
+                <ul class="nav navbar-nav pull-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <b class="glyphicon glyphicon-cog"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="#">Action</a>
+                            </li>
+                            <li>
+                                <a href="#">Another action</a>
+                            </li>
+                            <li>
+                                <a href="#">Something else here</a>
+                            </li>
+                            <li>
+                                <a href="#">Separated link</a>
+                            </li>
+                            <li>
+                                <a href="#">One more separated link</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <we-messenger></we-messenger>
+
+        <section ng-if="tab == 'contacts'" class="animate-if" ng-controller="contactsController">
+            <contacts>
+                <contact class="animate-repeat row" ng-repeat="contact in contacts | filter:q">
+                    <div class="contact-header col-3" ng-click="openContact(contact)">
+                        <avatar user-id="{{contact.id}}" class="creator-avatar"></avatar>
+                        {{contact.name}}
+                    </div>
+
+                    <messages class="col-9">
+                      <message class="animate-repeat" ng-repeat="message in contact.messages | filter:q" scrollbottom >
+                        <avatar user-id="{{message.fromId}}" class="creator-avatar"></avatar>
+                        {{message.content}}
+                      </message>
+
+                      <div data-ng-show="contact.isWriting" class="contact is-writing">
+                        <span class="is-writing-text">{{contact.name}} is writing ... </span>
+                      </div>
+
+                      <message-form-add>
+                        <form class="message-form-add" data-ng-submit="send(contact.newMessage, contact.id, $event)" >
+                          <div class="input-group">
+                            <textarea class="new-message" data-ng-model="contact.newMessage" data-ng-change="emitIsWriting(contact.id)" type="text" name="newMessage">{{contact.newMessage}}</textarea>
+                            <input data-ng-model="contact.id" type="hidden" name="toId" value="{{contact.id}}">
+                            <span class="input-group-btn">
+                              <button class="btn btn-xs btn-default" type="submit">Send</button>
+                            </span>
+                          </div><!-- /input-group -->
+                        </form>
+                      </message-form-add>
+
+                    </messages>
+
+                </contact>
+            </contacts>
+        </section>
+
+        <section ng-if="tab == 'talk'">
+            talk
+        </section>
+
+        <script src="scripts/app.js"></script>
+        <script src="scripts/auth/services/SessionService.js"></script>
+        <script src="scripts/user/services/UserService.js"></script>
+        <script src="scripts/avatar/directives/avatar.js"></script>
+    </body>
+</html>
