@@ -3,7 +3,7 @@
 var serverUrl = we.serverUrl;
 
 chrome.runtime.onInstalled.addListener(function (details) {
-    console.log('previousVersion', details.previousVersion);
+  console.log('previousVersion', details.previousVersion);
 });
 
 chrome.browserAction.setBadgeText({text: ''});

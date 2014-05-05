@@ -7,6 +7,11 @@ var app = angular.module('app', [
   'ngResource'
 ]);
 
+app.filter('momentTimeAgo', function() {
+    return function(dateString, format) {
+        return moment(dateString).fromNow();
+    };
+});
 
 app.controller("popupController", [
     "$scope",
@@ -44,19 +49,17 @@ app.controller("contactsController", [
         });
       });
 
-      /*
-      $scope.contacts.forEach(function(contact, i){
-        console.log(contact);
-        we.messenger.getMessagesWithUser(contact.id, function(err, messages){
-
-          $scope.contacts[i].messages = messages;
-          $scope.$apply();
-        });
-      });
-      */
     });
 
     we.events.on('messenger-message-received', function(){
+      $scope.$apply();
+    });
+
+    we.events.on('messenger-contact-connected', function(){
+      $scope.$apply();
+    });
+
+    we.events.on('messenger-contact-diconnected', function(){
       $scope.$apply();
     });
 

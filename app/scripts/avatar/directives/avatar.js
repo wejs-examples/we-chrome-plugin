@@ -41,7 +41,6 @@
               setVars(scope, scope.avatarId);
             }
             scope.avatarLink = we.serverUrl + '/users/' + user.id;
-            //scope.$apply();
           });
         }
 

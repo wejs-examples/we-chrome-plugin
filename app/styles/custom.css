@@ -11,7 +11,10 @@ body, section {			/* Change width and height to own preferences */
 }
 
 /* Basic style tweaks */
-section { padding: 5px;}
+section {
+  padding: 5px;
+  padding-top: 0px;
+}
 .navbar { margin-bottom: 2px; }
 
 /* Scroll Bar */
@@ -19,7 +22,32 @@ section { padding: 5px;}
 ::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); }
 ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:window-inactive  { background: red; }
 
+.navbar {
+  background-color: #1272BA;
+  border: 0px;
+  border-radius: 0px;
+  height: 40px;
+  min-height: 0;
+}
 
+.navbar a,
+.navbar-default .navbar-nav>li>a,
+.navbar-default .navbar-brand {
+  color: #fff;
+}
+
+.navbar-nav>li>a {
+  padding-top: 10px;
+}
+
+.navbar-brand {
+  font-size: 15px;
+  padding: 10px;
+}
+
+.navbar-default .navbar-brand:focus {
+  color: #fff;
+}
 
 contacts {
   width: 100%;
@@ -32,6 +60,11 @@ contact {
   /* float: left; */
   clear: both;
   height: 150px;
+
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  background-color: #eee;
 }
 
 .contact-header {
@@ -39,6 +72,17 @@ contact {
   display: block;
   float: left;
 }
+
+.contact-header img {
+  width: 80px;
+  height: 80px;
+  padding: 10px;
+
+  border: 2px solid #ccc;
+  border-radius: 20px;
+  background-color: #fff;
+}
+
 messages {
   display: block;
   overflow-x: auto;
@@ -49,14 +93,30 @@ messages {
 
 message {
   display: block;
+  margin: 5px 0px;
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 1px;
 }
 
 message > avatar img {
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
+}
+
+message > avatar {
+  height: 30px;
+  width: 25px;
+  display: block;
+  float: left;
+  margin: 3px 10px 3px 3px;
 }
 
 message-form-add > form .new-message {
   width: 90%;
   min-width: 200px;
+}
+
+div.small {
+  font-size: 0.75em;
 }

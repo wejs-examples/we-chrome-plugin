@@ -1,7 +1,8 @@
 
 var we = {}
 
-we.serverUrl = "http://wejs.org";
+//we.serverUrl = "http://wejs.org";
+we.serverUrl = "http://localhost:1337";
 
 we.authenticatedUser = {};
 
@@ -11,8 +12,9 @@ we.events.on = function weAddEventListener(event, callback){
   window.addEventListener(event, callback, false);
 };
 
-we.events.trigger = function weTriggerEvent(eventName){
-  var event = new Event(eventName);
+we.events.trigger = function weTriggerEvent(eventName, data){
+  // create a curtom event and pass the data in detail atribute
+  var event = new CustomEvent(eventName, { 'detail': data });
   // Dispatch the event.
   window.dispatchEvent(event);
 };
@@ -21,7 +23,6 @@ we.users = {};
 
 we.getUser = function getUser(id, callback){
   if(we.users[id] && we.users[id].id){
-    console.log('user from cache', we.users, we.users[id])
     callback(null, we.users[id]);
   }else{
     var req = new XMLHttpRequest();
@@ -44,7 +45,6 @@ we.getUser = function getUser(id, callback){
 
 we.storeUser = function storeUser(user){
   we.users[user.id] = user;
-  console.log(we);
 };
 
 /**

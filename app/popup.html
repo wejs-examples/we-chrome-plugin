@@ -9,12 +9,13 @@
         <!-- endbower -->
 
         <link href="styles/bootstrap.min.css" rel="stylesheet"></link>
-        <link href="styles/bootstrap-theme.min.css" rel="stylesheet"></link>
+
         <link href="styles/custom.css" rel="stylesheet"></link>
 
 
         <script src="scripts/libs/lodash.min.js"></script>
         <script src="scripts/libs/jquery.min.js"></script>
+        <script src="scripts/libs/moment-with-langs.min.js"></script>
 
         <script src="bower_components/angular/angular.min.js"></script>
         <script src="scripts/libs/angular-resource.min.js"></script>
@@ -27,8 +28,9 @@
     <body ng-controller="popupController">
 
         <nav class="navbar navbar-default" role="navigation">
+            <img id="logo" class="pull-left" src="images/icon-38.png">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#" ng-click="tabGoTo('contacts')">Contacts</a>
+                <a class="navbar-brand" href="#" ng-click="tabGoTo('contacts')">Contatos</a>
             </div>
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav">
@@ -65,29 +67,38 @@
 
         <section ng-if="tab == 'contacts'" class="animate-if" ng-controller="contactsController">
             <contacts>
-                <contact class="animate-repeat row" ng-repeat="contact in contacts | filter:q">
+
+                <contact class="animate-repeat" ng-repeat="contact in contacts | filter:q">
                     <div class="contact-header col-3" ng-click="openContact(contact)">
-                        <avatar user-id="{{contact.id}}" class="creator-avatar"></avatar>
-                        {{contact.name}}
+
+                        <avatar user-id="{{contact.id}}" class="creator-avatar bubble thought"></avatar>
+
                     </div>
 
                     <messages class="col-9">
                       <message class="animate-repeat" ng-repeat="message in contact.messages | filter:q" scrollbottom >
                         <avatar user-id="{{message.fromId}}" class="creator-avatar"></avatar>
-                        {{message.content}}
+                        <div class="contact-body">
+                          <div class="message-content">
+                            {{message.content}}
+                          </div>
+                          <div  class="createdAt small text-muted">{{message.createdAt | momentTimeAgo:'M/D/YYYY h:m A'}}</div>
+                        </div>
+
                       </message>
 
                       <div data-ng-show="contact.isWriting" class="contact is-writing">
-                        <span class="is-writing-text">{{contact.name}} is writing ... </span>
+                        <span class="is-writing-text">{{contact.name}}, digitando ... </span>
                       </div>
 
                       <message-form-add>
                         <form class="message-form-add" data-ng-submit="send(contact.newMessage, contact.id, $event)" >
                           <div class="input-group">
-                            <textarea class="new-message" data-ng-model="contact.newMessage" data-ng-change="emitIsWriting(contact.id)" type="text" name="newMessage">{{contact.newMessage}}</textarea>
+                            <input class="new-message" data-ng-model="contact.newMessage" data-ng-change="emitIsWriting(contact.id)" type="text" placeholder=" Digite a mensagem aqui ..." name="newMessage" value="">
+
                             <input data-ng-model="contact.id" type="hidden" name="toId" value="{{contact.id}}">
                             <span class="input-group-btn">
-                              <button class="btn btn-xs btn-default" type="submit">Send</button>
+                              <button class="btn btn-xs btn-primary" type="submit">Enviar</button>
                             </span>
                           </div><!-- /input-group -->
                         </form>
@@ -96,6 +107,13 @@
                     </messages>
 
                 </contact>
+
+                <div ng-hide="contacts" class="text-center">
+                  <h3>Nenhum usuário online :(</h3>
+
+                  <p>Convide os seus amigos para fazer parte dessa rede!</p>
+                </div>
+
             </contacts>
         </section>
 

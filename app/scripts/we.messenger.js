@@ -4,6 +4,10 @@ var messenger = {};
 messenger.contacts = {};
 messenger.openContact = {};
 
+// public room
+messenger.publicRoom = {};
+messenger.publicRoom.messages = [];
+
 messenger.connected = false;
 // -- Socket IO
 
@@ -57,24 +61,21 @@ messenger.connect = function connectInSocketIO() {
 
     var newMessageObj = {};
     we.getAuthenticatedUser(function(err, user){
-      console.log('user',user);
-      console.log('data',data);
 
-      newMessageObj.content = data.message.content;
-      newMessageObj.toId = user.id ;
-      newMessageObj.fromId = data.message.fromId;
-      newMessageObj.status = 'sending';
+      if(data.message){
+        console.log(we.messenger.contacts);
+        console.log(we.messenger.contacts[data.message.fromId]);
 
-      console.log(we.messenger.contacts);
-      console.log(we.messenger.contacts[data.message.fromId]);
+        messenger.contacts[data.message.fromId].messages.push(data.message);
 
-      we.messenger.contacts[data.message.fromId].messages.push(data.message);
+        messenger.contacts[data.message.fromId].isWriting = false;
 
-      we.messenger.contacts[data.message.fromId].isWriting = false;
-      console.log('message received2 ...');
+        //$scope.messengerAlertNewMessageReceived(newMessageObj.fromId);
+        we.events.trigger("messenger-message-received", {
+          'contact_message': data.message
+        });
+      }
 
-      //$scope.messengerAlertNewMessageReceived(newMessageObj.fromId);
-      we.events.trigger("messenger-message-received");
 
     });
 
@@ -86,55 +87,69 @@ messenger.connect = function connectInSocketIO() {
      */
     messenger.socket.on("receive:public:message", function(data) {
 
-      if(!$scope.user.authorized) return false;
+      if(!we.isAuthenticated) return false;
 
-      var newMessageObj = {};
-      var user = we.getAuthenticatedUser();
+      if(data.message){
 
-      newMessageObj.content = data.message.content;
-      newMessageObj.toId = '' ;
-      newMessageObj.fromId = data.message.fromId;
-      newMessageObj.status = 'sending';
+        messenger.publicRoom.messages.push(data.message);
 
-      $scope.publicRoom.messages.push(data.message);
-
-
-      $scope.messengerAlertNewMessageReceived('public');
+        we.events.trigger("messenger-public-message-received", { 'contact_message': data.message});
+      }
     });
 
     /**
-     * Message receveid after a contact connect
+     * Message receved after a contact connect
      * @param  object data
      */
     messenger.socket.on("contact:connect", function(data) {
+      if(!we.isAuthenticated) return false;
 
-      if(!$scope.user.authorized) return false;
+      var contact = data.item;
 
-      var user = SessionService.getUser();
-      var contact = data.contact;
+      we.getAuthenticatedUser(function(err, user){
 
-      if(user.id != contact.id){
-        // set default values for every contact
-        if(!contact.messages){
-          contact.messages = [];
+        if(user.id != contact.id){
+          // set default values for every contact
+          if(!contact.messages){
+            contact.messages = [];
+          }
+          if(!contact.messengerBox){
+            contact.messengerBox = {};
+          }
+
+          if(we.messenger.contacts[contact.id]){
+            // if contact exists in contacts
+            we.messenger.contacts[contact.id].messengerStatus = contact.messengerStatus;
+          }else{
+            // else are a new contact
+            we.messenger.storeContact(contact);
+          }
+
+          we.events.trigger("messenger-contact-connected", {'contact_id': contact.id});
         }
-        if(!contact.messengerBox){
-          contact.messengerBox = {};
-        }
 
-        if($scope.contacts[contact.id]){
-          // if contact exists in contacts
-          $scope.contacts[contact.id].messengerStatus = contact.messengerStatus;
-        }else{
-          // esle are a new contact
-          $scope.contacts[contact.id] = contact;
-        }
-
-        //$scope.contacts[data.contact.id] = ;
-        //$scope.contacts[data.contact.id] = ;
-        $scope.$apply();
-      }
+      });
     });
+
+    /**
+     * Message receveid after a contact disconect
+     * @param  object data
+     */
+    messenger.socket.on("contact:disconnect", function(data) {
+      if(!we.isAuthenticated) return false;
+
+      if(data.contact && data.contact.id){
+
+        if(we.messenger.contacts[data.contact.id]){
+          we.messenger.contacts[data.contact.id].messengerStatus = 'offline';
+        }
+
+        we.events.trigger("messenger-contact-diconnected", {'contact_id': data.contact.id});
+
+      }
+
+    });
+
 
     return messenger.socket;
 }
