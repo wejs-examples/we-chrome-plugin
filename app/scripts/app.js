@@ -17,9 +17,16 @@ app.controller("popupController", [
     "$scope",
   function popupController($scope) {
     $scope.tab = 'contacts';
+    we.getAuthenticatedUser(function(err, user){
+      $scope.authenticatedUser = user;
+
+      if(!$scope.$$phase) {
+        $scope.$apply();
+      }
+
+    });
 
     $scope.tabGoTo = function tabGoTo(tabName){
-
       $scope.tab = tabName;
     }
   }
@@ -44,10 +51,12 @@ app.controller("contactsController", [
           contact.messages = messages;
 
           we.messenger.storeContact(contact);
-
-          $scope.$apply();
         });
       });
+
+      if(!$scope.$$phase) {
+        $scope.$apply();
+      }
 
     });
 

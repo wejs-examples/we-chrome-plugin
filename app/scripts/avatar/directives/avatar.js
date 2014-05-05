@@ -74,7 +74,7 @@
       return{
         restrict:"E",
         scope: true,
-        template: '<a href="{{avatarLink}}"> <img width="{{avatarWidth}}" height="{{avatarHeight}}" class="{{avatarClass}}" src="/images/avatars/user-avatar.png" data-ng-src="{{avatarImageUrl}}"/> </a>',
+        template: '<img width="{{avatarWidth}}" height="{{avatarHeight}}" class="{{avatarClass}}" src="/images/avatars/user-avatar.png" data-ng-src="{{avatarImageUrl}}"/>',
         link: linker
       };
     }

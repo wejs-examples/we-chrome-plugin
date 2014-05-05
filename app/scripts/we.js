@@ -1,8 +1,8 @@
 
 var we = {}
 
-//we.serverUrl = "http://wejs.org";
-we.serverUrl = "http://localhost:1337";
+we.serverUrl = "http://wejs.org";
+//we.serverUrl = "http://localhost:1337";
 
 we.authenticatedUser = {};
 
