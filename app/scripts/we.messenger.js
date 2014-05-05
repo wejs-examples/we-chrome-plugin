@@ -1,6 +1,8 @@
 
 var messenger = {};
 
+messenger.unReadMessagesCount = 0;
+
 messenger.contacts = {};
 messenger.openContact = {};
 
@@ -23,6 +25,8 @@ messenger.connect = function connectInSocketIO() {
   messenger.socket.on('connect', function socketConnected() {
     messenger.connected = true;
     we.events.trigger("connect");
+
+    we.audios.connect.play();
 
     // Listen for Comet messages
     messenger.socket.on('message', function messageReceived(message) {
@@ -63,16 +67,26 @@ messenger.connect = function connectInSocketIO() {
     we.getAuthenticatedUser(function(err, user){
 
       if(data.message){
-        console.log(we.messenger.contacts);
-        console.log(we.messenger.contacts[data.message.fromId]);
 
-        messenger.contacts[data.message.fromId].messages.push(data.message);
+        if(!messenger.contacts[data.message.fromId]){
+          we.getUser(data.message.fromId, function(err, user){
+            messenger.contacts[data.message.fromId] = user;
+            messenger.contacts[data.message.fromId].messages = [];
 
-        messenger.contacts[data.message.fromId].isWriting = false;
+            messenger.contacts[data.message.fromId].messages.push(data.message);
+            we.audios.newMessage.play();
+            messenger.contacts[data.message.fromId].isWriting = false;
 
-        //$scope.messengerAlertNewMessageReceived(newMessageObj.fromId);
+          });
+
+        }else{
+          messenger.contacts[data.message.fromId].messages.push(data.message);
+            we.audios.newMessage.play();
+          messenger.contacts[data.message.fromId].isWriting = false;
+        }
+
         we.events.trigger("messenger-message-received", {
-          'contact_message': data.message
+          'message': data.message
         });
       }
 
@@ -93,7 +107,7 @@ messenger.connect = function connectInSocketIO() {
 
         messenger.publicRoom.messages.push(data.message);
 
-        we.events.trigger("messenger-public-message-received", { 'contact_message': data.message});
+        we.events.trigger("messenger-public-message-received", { 'message': data.message});
       }
     });
 

@@ -1,10 +1,14 @@
 
 var we = {}
 
-we.serverUrl = "http://wejs.org";
-//we.serverUrl = "http://localhost:1337";
+//we.serverUrl = "http://wejs.org";
+we.serverUrl = "http://localhost:1337";
 
 we.authenticatedUser = {};
+
+we.audios = {};
+we.audios.connect = new Audio("../audios/lightsaber.mp3");
+we.audios.newMessage = new Audio("../audios/tick.mp3");
 
 we.events = {};
 
@@ -112,9 +116,7 @@ we.notify = function notify(title, msg, onClickFunction, image) {
     );
 
     if(onClickFunction){
-      notification.onclick = function () {
-
-      }
+      notification.onclick = onClickFunction;
     }
 
     notification.show();

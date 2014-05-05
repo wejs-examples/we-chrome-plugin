@@ -27,7 +27,8 @@
         "http://localhost/"
     ],
     "web_accessible_resources": [
-        "images/icon-38.png"
+        "images/icon-38.png",
+        "images/avatars/user-avatar.png"
     ],
     "browser_action": {
         "default_icon": {
